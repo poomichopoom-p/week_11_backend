@@ -40,7 +40,7 @@ app.get("/", (req, res) => {
   </html>`);
 });
 
-app.get("/user", (req, res) => {
+app.get("/users", (req, res) => {
   res.json(users);
 });
 
