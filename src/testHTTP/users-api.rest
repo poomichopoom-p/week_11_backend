@@ -1,0 +1,27 @@
+###Read all user
+GET http://localhost:3000/users
+
+
+###Create a new user
+POST http://localhost:3000/users
+Content-Type: application/json
+
+
+
+{
+    "username": "Charlie",
+    "email": "charlie@exaple.com",
+    "password":"pass3345"
+}
+
+
+
+###Update a user
+PUT http://localhost:3000/users/4
+Content-Type: application/json
+
+{
+    "username": "Earn",
+    "email": "WatYaai@exaple.com",
+    "password":"Clang"
+}
