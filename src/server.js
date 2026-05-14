@@ -5,6 +5,7 @@ import { users } from "./fakeData/fakeUsers.js";
 import { router as apiRoutes } from "./routes/v1/index.js";
 
 
+
 const app = express();
 
 app.use(cors());
@@ -14,7 +15,7 @@ app.use(express.json());
 const port = 3000;
 
 
-app.use("/api", apiRoutes);
+
 
 app.get("/", (req, res) => {
   res.send(`<!doctype html>
@@ -48,6 +49,9 @@ app.get("/", (req, res) => {
     </body>
   </html>`);
 });
+
+app.use("/api", apiRoutes);
+
 
 app.listen(port, () => {
   console.log(`Server running on port : ${port}🌎✔`);

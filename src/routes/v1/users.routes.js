@@ -23,7 +23,7 @@ router.post("/", (req, res) => {
   return res.status(201).json(newUser);
 });
 
-router.put("/users/:id", (req, res) => {
+router.put("/:id", (req, res) => {
   const user = users.find((u) => u.id === req.params.id);
 
   if (!user) {
@@ -44,6 +44,10 @@ router.put("/users/:id", (req, res) => {
 
   res.status(200).json(user);
 });
+
+router.delete("/delete/:id", (req,res) => {
+  
+})
 
 // app.post("/createAccount", (req, res) => {
 //   const newUser = {

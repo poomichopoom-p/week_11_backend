@@ -17,11 +17,18 @@ Content-Type: application/json
 
 
 ###Update a user
-PUT http://localhost:3000/users/4
+PUT http://localhost:3000/api/users/1
 Content-Type: application/json
 
 {
     "username": "Earn",
     "email": "WatYaai@exaple.com",
-    "password":"Clang"
+    "password":"C_lang"
 }
+
+
+
+### Get all product
+GET http://localhost:3000/api/product/
+
+
