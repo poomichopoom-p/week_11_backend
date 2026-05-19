@@ -48,6 +48,19 @@ app.get("/", (req, res) => {
   </html>`);
 });
 
+// Centralized error handling middelware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(err.status || 500).json({
+    success: false,
+    message: err.message || "Internal Server Error!",
+    path: req.originalUrl,
+    method: req.method,
+    timestamp: new Data().toISOString,
+    stack: err.stack,
+  });
+});
+
 app.use("/api", apiRoutes);
 
 await connectDB();

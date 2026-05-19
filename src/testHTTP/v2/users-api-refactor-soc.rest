@@ -10,22 +10,23 @@ POST http://localhost:3000/api/v2/users
 Content-Type: application/json
 
 {
-    "username": "rodan",
+    "username": "emily",
     "role": "admin",
-    "email": "rodan@exaple.com",
+    "email": "emily@exaple.com",
     "password":"pass4455"
 }
 
 
 
 ###Update a user
-PUT http://localhost:3000/api/v2/users/6a0ae7659d35d67e11a43250
+PUT http://localhost:3000/api/v2/users/6a0ae6d59d35d67e11a4324e
 Content-Type: application/json
 
 {
     "username": "Earn",
+    "role": "user",
     "email": "WatYaai@exaple.com",
-    "password":"C_lang"
+    "password":"C_lang4556"
 }
 
 
