@@ -10,16 +10,16 @@ POST http://localhost:3000/api/v2/users
 Content-Type: application/json
 
 {
-    "username": "Michelle",
+    "username": "rodan",
     "role": "admin",
-    "email": "Michellelie2@exaple.com",
+    "email": "rodan@exaple.com",
     "password":"pass4455"
 }
 
 
 
 ###Update a user
-PUT http://localhost:3000/api/v1/users/1
+PUT http://localhost:3000/api/v2/users/6a0ae7659d35d67e11a43250
 Content-Type: application/json
 
 {
@@ -32,5 +32,9 @@ Content-Type: application/json
 
 ### Get all product
 GET http://localhost:3000/api/v1/product/
+
+
+### Delete by id
+DELETE http://localhost:3000/api/v2/users/6a0ae6f69d35d67e11a4324f
 
 
