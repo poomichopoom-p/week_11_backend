@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { User } from "../../modules/users/user.model.js";
 import { supabase } from "../../config/supabase.js";
-import { deleteUser, getUsers, updateUsers, createUsers } from "../../modules/users/users.v2.controller.js";
+import { deleteUser, getUsers, updateUsers, createUsers, createUsersHash } from "../../modules/users/users.v2.controller.js";
 
 
 export const router = Router();
@@ -10,7 +10,8 @@ export const router = Router();
 
 
 router.get("/", getUsers );
-router.post("/", createUsers );
+router.post("/", createUsersHash );
+// router.post("/login",)
 router.put("/:id",updateUsers );
 router.delete("/:id",deleteUser );
 
