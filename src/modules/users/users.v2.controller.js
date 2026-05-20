@@ -9,14 +9,15 @@ const userResponse = (doc) => {
 
 export const getUsers = async (req, res, next) => {
   try {
-    const users = await User.find();
+    const users = await User.find()
+    console.log(users);
     return res.status(200).json({ success: true, data: users });
   } catch (err) {
     next(err);
   }
 };
 
-export const createUsers = async (req, res) => {
+export const createUsers = async (req, res, next) => {
   const { username, email, password, role } = req.body || {};
 
   if (!username || !email || !password) {
@@ -39,7 +40,7 @@ export const createUsers = async (req, res) => {
   }
 };
 
-export const updateUsers = async (req, res) => {
+export const updateUsers = async (req, res, next) => {
   const { username, email, password, role } = req.body || {};
   const updates = {};
 
@@ -73,7 +74,7 @@ export const updateUsers = async (req, res) => {
   }
 };
 
-export const deleteUser = async (req, res) => {
+export const deleteUser = async (req, res, next) => {
   const { id } = req.params || {};
   try {
     const response = await User.findByIdAndDelete(id);
@@ -86,33 +87,60 @@ export const deleteUser = async (req, res) => {
   }
 };
 
-export const createUsersHash = async (req, res) => {
-const { password, email, username, role } = req.body || {};
+export const usersLogin = async (req, res, next) => {
+  const { email, username, password } = req.body || {};
 
-if(!email || !password){
-  console.error(`email andd password requied : ${err}`)
-  next(err);
-}
+  try {
+    const user = await User.findOne({ email }).select("+password");
+    console.log(user)
 
- async function hashedPassword(password) {
-  const hash = await bcrypt.hash(password, 12);
-  return hash;
+    const isMatched = await bcrypt.compare(password, user.password);
+    if (isMatched) {
+      res
+        .status(200)
+        .json({ success: true, message: "Identity verification successful ✔" });
+    } else {
+      res.status(404).json({
+        success: false,
+        error: err,
+        message: "email or password isn't correct",
+      });
+    }
+  } catch (err) {
+    next(err);
   }
-
-try{  
-  const user = await User.findOne({email})
-  if(user){
-    return res.status(400).json({message:"email alard use.",success: false})
-  }
-  const newPassword = await bcrypt.hash(password, 14)
- const doc = await User.create({email,username,password:newPassword,role})
- res.status(201).json({success: true, data: doc})
-}catch(err){
-  next(err)
-}
-
 };
 
+export const createUsersHash = async (req, res, next) => {
+  const { password, email, username, role } = req.body || {};
+
+  if (!email || !password) {
+    console.error(`email andd password requied : ${err}`);
+    next(err);
+  }
+
+  try {
+    const user = await User.findOne({ email });
+    if (user) {
+      return res
+        .status(400)
+        .json({ message: "email alard use.", success: false });
+    }
+    // const newUser = new User({
+    //   username,
+    //   email,
+    //   password,
+    //   role,
+    // });
+
+    // const doc = await newUser.save();
+
+     const doc = await User.create({email,username,password,role})
+    res.status(201).json({ success: true, data: doc });
+  } catch (err) {
+    next(err);
+  }
+};
 
 // export const updateUser = async(req,res)=>{
 // try{

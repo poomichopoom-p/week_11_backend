@@ -1,6 +1,15 @@
 ###Read all user
 GET http://localhost:3000/api/v2/users  
 
+### Login usrs
+POST http://localhost:3000/api/v2/users/login
+Content-Type: application/json
+
+{
+    "email": "emily3@exaple.com",
+    "password": "pass4455"
+}
+
 
 
 
@@ -10,9 +19,9 @@ POST http://localhost:3000/api/v2/users
 Content-Type: application/json
 
 {
-    "username": "emily",
+    "username": "bhruc",
     "role": "admin",
-    "email": "emily3@exaple.com",
+    "email": "bruch@exaple.com",
     "password":"pass4455"
 }
 
