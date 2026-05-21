@@ -1,41 +1,44 @@
+// Extanal import from libarly
 import { Router } from "express";
-import { User } from "../../modules/users/user.model.js";
 import { supabase } from "../../config/supabase.js";
-import { deleteUser, getUsers, updateUsers, createUsers, createUsersHash, usersLogin } from "../../modules/users/users.v2.controller.js";
 
+// Internal import
+import { User } from "../../modules/users/user.model.js";
+import {
+  deleteUser,
+  getUsers,
+  updateUsers,
+  createUsers,
+  createUsersHash,
+  usersLogin,
+  usersLoginJWT,
+  usersLogout,
+  CheckUser,
+} from "../../modules/users/users.v2.controller.js";
+import authUser from "../../middlewares/auth.js";
 
 export const router = Router();
 
 // MongoDB routes {/api/v2/users}
 
+// See all users
+router.get("/", getUsers);
+// Create User
+router.post("/", createUsers);
+// Create User with hash password
+router.post("/signup", createUsersHash);
+// Login a user
+router.post("/login", usersLoginJWT);
+// Check user session/toke
+router.get("/auth/me", authUser, CheckUser);
+// Logout a user
+router.post("/auth/logout", usersLogout);
+// Update User account
+router.put("/:id", updateUsers);
+// Delete user account
+router.delete("/:id", deleteUser);
 
-router.get("/", getUsers );
-router.post("/", createUsersHash );
-router.post("/login",usersLogin);
-router.put("/:id",updateUsers );
-router.delete("/:id",deleteUser );
-
-
-
-
-// app.post("/createAccount", (req, res) => {
-//   const newUser = {
-//     id : DataTransfer.now().toString(),
-//     username : req.body.username,
-//     email : req.body.email,
-//     password :req.body.password,
-//   };
-//   users.push(newUser);
-
-//   res.status(201).json({
-//     message:"User created",
-//     data: newUser,
-//   });
-// });
-// app.delete("/deleteAccount", (req, res) => {});
-
-//Supabase /PostgreSQL routes
-
+// SupaBase (SQL)
 const PG_SELECT = "id, username, email, role, created_at, updated_at";
 
 router.get("/pg", async (req, res) => {
@@ -80,3 +83,23 @@ router.post("/pg", async (req, res) => {
 
   return res.status(201).json(newUser);
 });
+
+// play Ground
+
+// app.post("/createAccount", (req, res) => {
+//   const newUser = {
+//     id : DataTransfer.now().toString(),
+//     username : req.body.username,
+//     email : req.body.email,
+//     password :req.body.password,
+//   };
+//   users.push(newUser);
+
+//   res.status(201).json({
+//     message:"User created",
+//     data: newUser,
+//   });
+// });
+// app.delete("/deleteAccount", (req, res) => {});
+
+//Supabase /PostgreSQL routes

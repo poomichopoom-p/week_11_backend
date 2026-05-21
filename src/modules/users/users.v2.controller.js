@@ -1,6 +1,7 @@
-import { User } from "./user.model.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
+import { User } from "./user.model.js";
 const userResponse = (doc) => {
   const user = doc.toObject();
   delete user.password;
@@ -9,7 +10,7 @@ const userResponse = (doc) => {
 
 export const getUsers = async (req, res, next) => {
   try {
-    const users = await User.find()
+    const users = await User.find();
     console.log(users);
     return res.status(200).json({ success: true, data: users });
   } catch (err) {
@@ -39,7 +40,7 @@ export const createUsers = async (req, res, next) => {
     next(err);
   }
 };
-
+// Update user
 export const updateUsers = async (req, res, next) => {
   const { username, email, password, role } = req.body || {};
   const updates = {};
@@ -73,7 +74,7 @@ export const updateUsers = async (req, res, next) => {
     next(err);
   }
 };
-
+// Delete user
 export const deleteUser = async (req, res, next) => {
   const { id } = req.params || {};
   try {
@@ -86,13 +87,13 @@ export const deleteUser = async (req, res, next) => {
     next(err);
   }
 };
-
+// Login user
 export const usersLogin = async (req, res, next) => {
   const { email, username, password } = req.body || {};
 
   try {
     const user = await User.findOne({ email }).select("+password");
-    console.log(user)
+    console.log(user);
 
     const isMatched = await bcrypt.compare(password, user.password);
     if (isMatched) {
@@ -109,6 +110,90 @@ export const usersLogin = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+// Login with JWT
+export const usersLoginJWT = async (req, res, next) => {
+  const { email, username, password } = req.body || {};
+
+  try {
+    const user = await User.findOne({ email }).select("+password");
+    console.log(user);
+
+    const isMatched = await bcrypt.compare(password, user.password);
+    if (!isMatched) {
+      res
+        .status(400)
+        .json({ success: false, message: "verification not successful ⛔" });
+    }
+
+    const token = jwt.sign({ userId: user._id }, process.JWT_SECRET, {
+      expiresIn: "1h", //1 hours expiration
+    });
+
+    const isProd = process.env.NODE_ENV === "production";
+
+    res.cookie("accessToken", token, {
+      httpOnly: true,
+      secure: isProd, // only send over HTTPS in production
+      sameSite: isProd ? "none" : "lax",
+      parh: "/",
+      maxAge: 60 * 60 * 1000, // 1 hour
+    });
+    return res
+      .status(200)
+      .json({
+        success: true,
+        message: "Login successful !",
+        user: {
+          _id: user._id,
+          username: user.username,
+          email: user.email,
+          role: user.role,
+        },
+      });
+  } catch (err) {
+    next(err);
+  }
+};
+// Check user section
+export const CheckUser = async (req, res, next) => {
+  try {
+    const iserId = req.user.user_id;
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "User not found !",
+      });
+      return res.statys(200).json({
+        success: true,
+        data: {
+          _id: user._id,
+          username: user.username,
+          role: user.role,
+        },
+      });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+// Logout user
+export const usersLogout = async (req, res) => {
+  const isProd = process.env.NODE_ENV === "production";
+
+  res.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: isProd, // only send over HTTPS in production
+    sameSite: isProd ? "none" : "lax",
+    parh: "/",
+  });
+
+  return res.status(200).json({
+    success: true,
+    message: "Logout success !",
+  });
 };
 
 export const createUsersHash = async (req, res, next) => {
@@ -135,7 +220,7 @@ export const createUsersHash = async (req, res, next) => {
 
     // const doc = await newUser.save();
 
-     const doc = await User.create({email,username,password,role})
+    const doc = await User.create({ email, username, password, role });
     res.status(201).json({ success: true, data: doc });
   } catch (err) {
     next(err);
